@@ -106,10 +106,18 @@ define(['require', './normalize'], function(req, normalize) {
         "var d=document,a='appendChild',i='styleSheet',s=d.createElement('style');" +
         "s.type='text/css'; " +
         "var baseUrl = module.config().baseUrl || require.s.contexts._.config.baseUrl; " +
+        "var absBaseUrl = ''; " +
+        "if (baseUrl.indexOf('://') !== -1) {" +
+          "absBaseUrl = baseUrl.split('/').slice(0, 3).join('/');" +
+        "}" +
         "var cssRegex = /@import\\\s*(\"([^\"]*)\"|'([^']*)')|url\\\s*\\\((?!#)\\\s*(\\\s*\"([^\"]*)\"|'([^']*)'|[^\\\)]*\\\s*)\\\s*\\\)/ig;" +
         "c = c.replace(cssRegex, function(orig, p1, p2, p3, p4, p5, p6, p7, p8) {" +
           "var url = p3 || p2 || p5 || p6 || p4;" +
-          "return orig.replace(url, baseUrl + url);" +
+          "if (url.charAt(0) === '/') { " +
+            "return orig.replace(url, absBaseUrl + url); " +
+          "} else {" +
+            "return orig.replace(url, baseUrl + url);" +
+          "}" +
         "}); " +
         "d.getElementsByTagName('head')[0][a](s);" +
         "s[i]?s[i].cssText=c:s[a](d.createTextNode(c));" +

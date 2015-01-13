@@ -110,7 +110,7 @@ define(['require', './normalize'], function(req, normalize) {
         "if (baseUrl.indexOf('://') !== -1) {" +
           "absBaseUrl = baseUrl.split('/').slice(0, 3).join('/');" +
         "}" +
-        "var cssRegex = /@import\\\s*(\"([^\"]*)\"|'([^']*)')|url\\\s*\\\((?!['\"]?#)\\\s*(\\\s*\"([^\"]*)\"|'([^']*)'|[^\\\)]*\\\s*)\\\s*\\\)/ig;" +
+        "var cssRegex = /@import\\\s*(\"([^\"]*)\"|'([^']*)')|url\\\s*\\\((?!['\"]?#)(?!['\"]?data:)\\\s*(\\\s*\"([^\"]*)\"|'([^']*)'|[^\\\)]*\\\s*)\\\s*\\\)/ig;" +
         "c = c.replace(cssRegex, function(orig, p1, p2, p3, p4, p5, p6, p7, p8) {" +
           "var url = p3 || p2 || p5 || p6 || p4;" +
           "if (url.charAt(0) === '/') { " +

@@ -118,9 +118,38 @@ define(['require', './normalize'], function(req, normalize) {
           "} else {" +
             "return orig.replace(url, baseUrl + url);" +
           "}" +
-        "}); " +
-        "d.getElementsByTagName('head')[0][a](s);" +
-        "s[i]?s[i].cssText=c:s[a](d.createTextNode(c));" +
+        "});" +
+        "if (navigator.userAgent.indexOf('MSIE 9') !== -1) {" +
+            "var getSelectorCount = function (sheet) {" +
+                "var count = 0;" +
+                "if (sheet && sheet.cssRules) {" +
+                    "for (var i = 0; i < sheet.cssRules.length; i+=1) {" +
+                        "var cssRules = sheet.cssRules[i];" +
+                        "if (!cssRules.selectorText) {" +
+                            "continue;" +
+                        "}" +
+                        "count += cssRules.selectorText.split(',').length;" +
+                    "}" +
+                "}" +
+                "return count;" +
+            "};" +
+            "s[i].cssText = c;" +
+            "var selectorCount = getSelectorCount(s[i]);" +
+            "for (var j = 0; j < document.styleSheets.length; j++) {" +
+                "var styleSheet = document.styleSheets[j];" +
+                "var ownerNode = styleSheet.ownerNode;" +
+                "if (ownerNode.tagName.toLowerCase() === 'style' && ownerNode.getAttribute('data-require-css') && getSelectorCount(styleSheet) + selectorCount < 4096) {" +
+                    "s[i].cssText += '\\n' + styleSheet.cssText;" +
+                    "d.getElementsByTagName('head')[0].removeChild(ownerNode);" +
+                    "break;" +
+                "}" +
+            "}" +
+            "d.getElementsByTagName('head')[0][a](s);" +
+            "s.setAttribute('data-require-css', true);" +
+        "} else {" +
+            "d.getElementsByTagName('head')[0][a](s);" +
+            "s[i] ? s[i].cssText = c : s[a](d.createTextNode(c));" +
+        "}" +
       "};" +
     "});");
   var siteRoot;

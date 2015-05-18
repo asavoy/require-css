@@ -144,7 +144,7 @@ define(['require', './normalize'], function(req, normalize) {
     }
 
     //add to the buffer
-    cssBuffer[name] = normalize(loadFile(fileUrl), fileSiteUrl, siteRoot);
+    cssBuffer[name] = config.skipUrlNormalization ? loadFile(fileUrl) : normalize(loadFile(fileUrl), fileSiteUrl, siteRoot);
 
     load();
   }
